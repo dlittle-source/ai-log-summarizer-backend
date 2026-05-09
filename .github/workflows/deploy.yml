@@ -21,10 +21,5 @@ jobs:
             git pull origin main
             docker build -t project2-backend .
             docker rm -f project2-backend-container || true
-            docker run -d \
-              --name project2-backend-container \
-              --restart unless-stopped \
-              -p 5000:5000 \
-              --env-file .env \
-              project2-backend
+            docker run -d --name project2-backend-container --restart unless-stopped -p 5000:5000 --env-file .env project2-backend
             curl -f http://localhost:5000/health
