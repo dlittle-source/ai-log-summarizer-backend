@@ -1,0 +1,30 @@
+name: Deploy Backend to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/backend
+            git pull origin main
+            docker build -t project2-backend .
+            docker rm -f project2-backend-container || true
+            docker run -d \
+              --name project2-backend-container \
+              --restart unless-stopped \
+              -p 5000:5000 \
+              --env-file .env \
+              project2-backend
+            curl -f http://localhost:5000/health
