@@ -43,6 +43,7 @@ app.get("/health", (req, res) => {
     success: true,
     status: "healthy",
     service: "ai-log-summarizer-api",
+    version: "1.0.1",
     timestamp: new Date().toISOString(),
   });
 });
